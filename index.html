@@ -227,12 +227,62 @@
 
         /* About Section */
         .about-content {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .profile-picture {
+            flex-shrink: 0;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            padding: 4px;
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .profile-picture:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 80px rgba(139, 92, 246, 0.4);
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 3rem;
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 300px;
             font-size: 1.2rem;
             color: var(--text-secondary);
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
             line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .about-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 2rem;
+            }
+            
+            .profile-picture {
+                width: 150px;
+                height: 150px;
+            }
         }
 
         /* Experience Cards */
@@ -608,7 +658,12 @@
     <section id="about" class="animate-on-scroll pattern-circuit">
         <h2 class="section-title">About Me</h2>
         <div class="about-content">
-            Senior Full Stack Developer with over 10 years of experience in architecting, developing, and scaling robust web applications across logistics, travel, HR, and fintech sectors. Proven expertise in team building, technical leadership, and delivering high-performance solutions.
+            <div class="profile-picture">
+                <img src="./profile.jpg" alt="Bob Pham Profile Picture" onerror="this.innerHTML='<i class=\'fas fa-user\'></i>'; this.style.display='flex';">
+            </div>
+            <div class="about-text">
+                Senior Full Stack Developer with over 10 years of experience in architecting, developing, and scaling robust web applications across logistics, travel, HR, and fintech sectors. Proven expertise in team building, technical leadership, and delivering high-performance solutions.
+            </div>
         </div>
     </section>
 

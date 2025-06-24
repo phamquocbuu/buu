@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BI Dashboard Project - Bob Pham</title>
+    <link rel="icon" type="image/x-icon" href="./favico.svg">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: rgba(22, 22, 22, 0.8);
+            --accent-primary: #8b5cf6;
+            --accent-secondary: #06b6d4;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+        }
+
+        /* SVG Pattern Backgrounds */
+        .pattern-circuit {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M20 20c0 5.5-4.5 10-10 10s-10-4.5-10-10 4.5-10 10-10 10 4.5 10 10zm10 0c0 5.5-4.5 10-10 10s-10-4.5-10-10 4.5-10 10-10 10 4.5 10 10z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .pattern-grid {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Crect width='1' height='60'/%3E%3Crect y='59' width='60' height='1'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .pattern-tech-hero {
+            background-image: 
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffffff;stop-opacity:0.015'/%3E%3Cstop offset='100%25' style='stop-color:%23ffffff;stop-opacity:0.005'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.02' stroke-width='1'%3E%3Ccircle cx='100' cy='100' r='80'/%3E%3Ccircle cx='100' cy='100' r='60'/%3E%3Ccircle cx='100' cy='100' r='40'/%3E%3Ccircle cx='100' cy='100' r='20'/%3E%3Cline x1='20' y1='100' x2='180' y2='100'/%3E%3Cline x1='100' y1='20' x2='100' y2='180'/%3E%3Cline x1='41.4' y1='41.4' x2='158.6' y2='158.6'/%3E%3Cline x1='158.6' y1='41.4' x2='41.4' y2='158.6'/%3E%3C/g%3E%3Cg fill='%23ffffff' fill-opacity='0.01'%3E%3Crect x='90' y='90' width='20' height='20' rx='2'/%3E%3Crect x='10' y='90' width='15' height='15' rx='2'/%3E%3Crect x='175' y='90' width='15' height='15' rx='2'/%3E%3Crect x='90' y='10' width='15' height='15' rx='2'/%3E%3Crect x='90' y='175' width='15' height='15' rx='2'/%3E%3C/g%3E%3C/svg%3E"),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg stroke='%23ffffff' stroke-opacity='0.015' stroke-width='0.5' fill='none'%3E%3Cpath d='M10 10 L90 10 L90 90 L10 90 Z'/%3E%3Cpath d='M20 20 L80 20 L80 80 L20 80 Z'/%3E%3Cpath d='M30 30 L70 30 L70 70 L30 70 Z'/%3E%3Cpath d='M40 40 L60 40 L60 60 L40 60 Z'/%3E%3Ccircle cx='50' cy='50' r='3' fill='%23ffffff' fill-opacity='0.02'/%3E%3C/g%3E%3C/svg%3E");
+            background-position: 0 0, 50px 50px;
+            background-size: 200px 200px, 100px 100px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Background Effects */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--accent-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding-top: 8rem;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .hero .meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Content Sections */
+        .content-section {
+            padding: 4rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tech-item {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            text-align: center;
+        }
+
+        .architecture-placeholder {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border-color);
+            border-radius: 15px;
+            padding: 4rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            margin: 2rem 0;
+        }
+
+        .architecture-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent-primary);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .result-item {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .result-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .result-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        li {
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent-primary);
+        }
+
+        p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 0;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-primary);
+            transform-origin: left;
+            transform: scaleX(0);
+            z-index: 1001;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .hero .meta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .content-section {
+                padding: 3rem 1rem;
+            }
+
+            .tech-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GK8ZFEH5JM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-GK8ZFEH5JM');
+    </script>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="scroll-indicator"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="./index.html" class="logo">Bob Pham</a>
+            <a href="./index.html#projects" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Projects
+            </a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero pattern-tech-hero">
+        <div class="hero-content">
+            <h1>BI Dashboard</h1>
+            <p class="subtitle">Real-time Analytics for Express Delivery Operations</p>
+            <div class="meta">
+                <div class="meta-item">
+                    <i class="fas fa-building"></i>
+                    J&T Express Vietnam
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-user-tie"></i>
+                    Tech Lead & System Architect
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-calendar"></i>
+                    April 2020 – October 2023
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section class="content-section pattern-circuit">
+        <div class="animate-on-scroll">
+            <h2 class="section-title">Project Overview</h2>
+            <div class="content-card">
+                <p>
+                    The BI Dashboard project was a mission-critical initiative to develop a comprehensive real-time analytics platform 
+                    for J&T Express Vietnam's express delivery operations. As Tech Lead and System Architect, I spearheaded the 
+                    development of a high-performance dashboard capable of processing and visualizing massive volumes of logistics data.
+                </p>
+                <p>
+                    This project required innovative solutions to handle over 2 million waybills per day while maintaining real-time 
+                    data synchronization and providing actionable operational insights to stakeholders across the organization.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Goals & Challenges Section -->
+    <section class="content-section pattern-grid">
+        <div class="animate-on-scroll">
+            <h2 class="section-title">Goals & Challenges</h2>
+            <div class="two-column">
+                <div class="content-card">
+                    <h3><i class="fas fa-bullseye" style="color: var(--accent-primary); margin-right: 0.5rem;"></i>Project Goals</h3>
+                    <ul>
+                        <li>Develop a real-time analytics dashboard for express delivery operations</li>
+                        <li>Enable high-frequency data updates for operational insights</li>
+                        <li>Provide comprehensive visibility into logistics performance</li>
+                        <li>Support data-driven decision making across the organization</li>
+                    </ul>
+                </div>
+                <div class="content-card">
+                    <h3><i class="fas fa-mountain" style="color: var(--accent-secondary); margin-right: 0.5rem;"></i>Key Challenges</h3>
+                    <ul>
+                        <li>Handling massive volume of waybill data (2+ million waybills per day)</li>
+                        <li>Ensuring real-time data synchronization with minimal latency</li>
+                        <li>Providing accurate analytics with high availability and reliability</li>
+                        <li>Scaling the system to handle growing business demands</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Solution Section -->
+    <section class="content-section pattern-circuit">
+        <div class="animate-on-scroll">
+            <h2 class="section-title">Technical Solution</h2>
+            
+            <div class="content-card">
+                <h3>High-Level Architecture</h3>
+                <div class="architecture-placeholder">
+                    <i class="fas fa-sitemap"></i>
+                    <h4>System Architecture Diagram</h4>
+                    <p>Real-time data processing pipeline with load-balanced dashboard frontend</p>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>Technologies Used</h3>
+                <div class="tech-grid">
+                    <div class="tech-item"><strong>Backend:</strong> Laravel, NodeJS</div>
+                    <div class="tech-item"><strong>Frontend:</strong> Livewire</div>
+                    <div class="tech-item"><strong>Database:</strong> MySQL</div>
+                    <div class="tech-item"><strong>Infrastructure:</strong> AWS, Docker</div>
+                    <div class="tech-item"><strong>Web Server:</strong> Nginx</div>
+                    <div class="tech-item"><strong>CI/CD:</strong> GitHub Actions</div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>Key Technical Approaches</h3>
+                <ul>
+                    <li>Real-time data processing and synchronization every 5 minutes</li>
+                    <li>Database performance optimization using partitioning, stored procedures, functions, and triggers</li>
+                    <li>Load balancing and horizontal scaling to manage traffic effectively</li>
+                    <li>Optimized query performance for large-scale data aggregation</li>
+                    <li>Caching strategies to reduce database load and improve response times</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="content-section pattern-grid">
+        <div class="animate-on-scroll">
+            <h2 class="section-title">Results & Achievements</h2>
+            <div class="results-grid">
+                <div class="result-item">
+                    <div class="result-number">2M+</div>
+                    <div class="result-label">Waybills processed daily</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-number">5 min</div>
+                    <div class="result-label">Real-time refresh interval</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-number">99.9%</div>
+                    <div class="result-label">System uptime achieved</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-number">Company-wide</div>
+                    <div class="result-label">Operational efficiency improvement</div>
+                </div>
+            </div>
+            
+            <div class="content-card" style="margin-top: 2rem;">
+                <h3>Key Accomplishments</h3>
+                <ul>
+                    <li>Successfully managed and processed over 2 million waybills per day with consistent performance</li>
+                    <li>Achieved real-time analytics refresh every 5 minutes across all dashboard components</li>
+                    <li>Significantly improved operational insights for logistics management and planning</li>
+                    <li>Enhanced decision-making capabilities and operational efficiency company-wide</li>
+                    <li>Delivered a scalable solution that supported business growth and expansion</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lessons Learned Section -->
+    <section class="content-section pattern-circuit">
+        <div class="animate-on-scroll">
+            <h2 class="section-title">Lessons Learned</h2>
+            <div class="content-card">
+                <ul>
+                    <li>Gained extensive experience in handling large-scale data processing and real-time analytics systems</li>
+                    <li>Improved skills in database performance optimization and real-time system architecture design</li>
+                    <li>Enhanced leadership and project management capabilities, leading a cross-functional team effectively</li>
+                    <li>Developed expertise in scaling distributed systems to handle enterprise-level data volumes</li>
+                    <li>Learned the importance of monitoring, alerting, and proactive system maintenance in mission-critical applications</li>
+                    <li>Strengthened understanding of business requirements translation into technical solutions</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Pham Quoc Buu (Bob). Built with passion and modern web technologies.</p>
+    </footer>
+
+    <script>
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Header background on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            const scrollY = window.scrollY;
+            
+            if (scrollY > 100) {
+                header.style.background = 'rgba(10, 10, 10, 0.95)';
+            } else {
+                header.style.background = 'rgba(10, 10, 10, 0.9)';
+            }
+        });
+
+        // Scroll progress indicator
+        window.addEventListener('scroll', () => {
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = window.scrollY / totalHeight;
+            scrollIndicator.style.transform = `scaleX(${progress})`;
+        });
+    </script>
+</body>
+</html>

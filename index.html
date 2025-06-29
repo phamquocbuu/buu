@@ -589,6 +589,52 @@
             }
         }
 
+        /* Tech Stack Scroll Section */
+        .tech-stack-section {
+            padding: 3rem 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .tech-stack-container {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .tech-stack-scroll {
+            display: inline-block;
+            animation: scroll-left 30s linear infinite;
+        }
+
+        .tech-logo {
+            display: inline-block;
+            margin: 0 2rem;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            filter: grayscale(100%);
+        }
+
+        .tech-logo:hover {
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+
+        .tech-logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
         /* Scroll indicator */
         .scroll-indicator {
             position: fixed;
@@ -651,6 +697,50 @@
                 <i class="fas fa-rocket"></i>
                 Let's Build Something Amazing
             </a>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section class="tech-stack-section">
+        <div class="tech-stack-container">
+            <div class="tech-stack-scroll">
+                <div class="tech-logo">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" alt="PHP" title="PHP">
+                </div>
+                <div class="tech-logo">
+                    <img src="https://raw.githubusercontent.com/devicons/devicon/refs/tags/v2.16.0/icons/nestjs/nestjs-original.svg" alt="NestJS" title="NestJS">
+                </div>
+                <div class="tech-logo">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="Next.js" title="Next.js">
+                </div>
+                <div class="tech-logo">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL" title="MySQL">
+                </div>
+                <div class="tech-logo">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker" title="Docker">
+                </div>
+                <div class="tech-logo">
+                    <img src="https://github.com/n8n-io/n8n/blob/master/assets/n8n-logo.png?raw=true" alt="n8n" title="n8n">
+                </div>
+                <div class="tech-logo">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="TypeScript" title="TypeScript">
+                </div>
+                <div class="tech-logo">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" title="JavaScript">
+                </div>
+                <div class="tech-logo">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js" title="Node.js">
+                </div>
+                <div class="tech-logo">
+                    <img src="https://raw.githubusercontent.com/devicons/devicon/refs/tags/v2.16.0/icons/ubuntu/ubuntu-original.svg" alt="Ubuntu" title="Ubuntu">
+                </div>
+                <div class="tech-logo">
+                    <img src="https://mariadb.com/wp-content/uploads/2019/11/mariadb-logo-vert_blue-transparent.png" alt="MariaDB" title="MariaDB">
+                </div>
+                <div class="tech-logo">
+                    <img src="https://static.vecteezy.com/system/resources/previews/022/227/364/non_2x/openai-chatgpt-logo-icon-free-png.png" alt="OpenAI" title="OpenAI">
+                </div>
+            </div>
         </div>
     </section>
 

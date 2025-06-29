@@ -712,6 +712,14 @@ footer {
     }
 }
 
+/* Contact Grid Responsive */
+@media (max-width: 959px) and (min-width: 696px) {
+    .contact-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .nav-links {

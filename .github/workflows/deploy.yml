@@ -2,7 +2,7 @@ name: Build and Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ gh-pages ]
+    branches: [ main ]  # Change this to your main branch
   workflow_dispatch:
 
 permissions:
@@ -39,19 +39,24 @@ jobs:
 
       - name: Minify HTML files
         run: |
-          npx html-minifier-terser \
-            --input-dir . \
-            --output-dir dist \
-            --file-ext html \
-            --collapse-whitespace \
-            --remove-comments \
-            --remove-optional-tags \
-            --remove-redundant-attributes \
-            --remove-script-type-attributes \
-            --remove-tag-whitespace \
-            --use-short-doctype \
-            --minify-css true \
-            --minify-js true
+          # Copy HTML files first, then minify them one by one
+          cp *.html dist/
+          cd dist
+          for file in *.html; do
+            echo "Minifying $file..."
+            npx html-minifier-terser \
+              --collapse-whitespace \
+              --remove-comments \
+              --remove-optional-tags \
+              --remove-redundant-attributes \
+              --remove-script-type-attributes \
+              --remove-tag-whitespace \
+              --use-short-doctype \
+              --minify-css true \
+              --minify-js true \
+              --output "$file.tmp" \
+              "$file" && mv "$file.tmp" "$file"
+          done
 
       - name: Copy static assets
         run: |

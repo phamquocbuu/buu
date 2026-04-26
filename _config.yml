@@ -1,0 +1,62 @@
+# Jekyll Configuration
+title: "Your Blog Title"
+author: "Buu Pham"
+description: "Personal brand and blog"
+baseurl: ""
+url: "https://buupham.dev"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+# Preserve existing HTML files - don't process them
+keep_files:
+  - assets
+  - index.html
+  - about.html
+  - leadtime-optimization.html
+  - bi-dashboard.html
+  - side-projects.html
+  - tachdiachi.html
+  - marketflow.html
+  - ai-assistant-workflows.html
+
+# Blog folder configuration
+collections_dir: blog
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /blog/:year/:month/:day/:slug/
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Feed settings
+feed:
+  path: /blog/feed.xml
+  collections:
+    posts:
+      path: /blog/feed.xml
+
+# Exclude files and folders
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .obsidian
+  - .github
+
+# Include hidden files/folders if needed
+# include:
+#   - .gitkeep
+
+# Build settings
+safe: false
+lsi: false
+incremental: false

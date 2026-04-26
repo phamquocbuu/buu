@@ -1,0 +1,5 @@
+# Obsidian vault settings - don't commit user-specific configs
+.obsidian/
+
+# Obsidian cache
+.DS_Store

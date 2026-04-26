@@ -2,33 +2,111 @@
 layout: default
 ---
 
-<article class="post">
-  <header class="post-header">
-    <h1 class="post-title">{{ page.title }}</h1>
-    <time class="post-meta" datetime="{{ page.date | date_to_xmlschema }}">
-      {{ page.date | date: "%b %-d, %Y" }}
-    </time>
-    {% if page.author %}
-    <p class="post-author">By {{ page.author }}</p>
-    {% endif %}
-    {% if page.categories %}
-    <div class="post-categories">
-      {% for category in page.categories %}
-        <span class="tag">{{ category }}</span>
-      {% endfor %}
+<!-- Blog Post Hero Section -->
+<section class="hero pattern-tech-hero" style="min-height: 50vh; padding-top: 8rem;">
+    <div class="hero-content">
+        <h1>{{ page.title }}</h1>
+        <p class="subtitle">{{ page.description | default: page.excerpt | strip_html | truncatewords: 30 }}</p>
+        <div class="meta">
+            <div class="meta-item">
+                <i class="fas fa-calendar-alt"></i>
+                {{ page.date | date: "%B %-d, %Y" }}
+            </div>
+            {% if page.author %}
+            <div class="meta-item">
+                <i class="fas fa-user"></i>
+                {{ page.author | default: site.author }}
+            </div>
+            {% endif %}
+            {% if page.reading_time %}
+            <div class="meta-item">
+                <i class="fas fa-clock"></i>
+                {{ page.reading_time }} min read
+            </div>
+            {% endif %}
+        </div>
     </div>
-    {% endif %}
-  </header>
+</section>
 
-  <div class="post-content">
-    {{ content }}
-  </div>
+<!-- Blog Post Content -->
+<article class="content-section pattern-circuit animate-on-scroll">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <div class="content-card">
+            <div class="post-content">
+                {{ content }}
+            </div>
 
-  {% if page.tags %}
-  <footer class="post-tags">
-    {% for tag in page.tags %}
-      <a href="/blog/tags/{{ tag | slugify }}/">{{ tag }}</a>
-    {% endfor %}
-  </footer>
-  {% endif %}
+            {% if page.tags %}
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+                <h3 style="margin-bottom: 1rem;">Tags</h3>
+                <div class="skill-tags">
+                    {% for tag in page.tags %}
+                    <a href="/blog/tags/{{ tag | slugify }}/" class="skill-tag" style="text-decoration: none; cursor: pointer;">
+                        <i class="fas fa-tag" style="margin-right: 0.3rem;"></i>{{ tag }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if page.categories %}
+            <div style="margin-top: 2rem;">
+                <h3 style="margin-bottom: 1rem;">Categories</h3>
+                <div class="skill-tags">
+                    {% for category in page.categories %}
+                    <span class="skill-tag">
+                        <i class="fas fa-folder" style="margin-right: 0.3rem;"></i>{{ category }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Navigation -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 3rem; gap: 1rem; flex-wrap: wrap;">
+            {% if page.previous %}
+            <a href="{{ page.previous.url }}" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: rgba(139, 92, 246, 0.1); color: var(--accent-primary); text-decoration: none; border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 25px; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(139, 92, 246, 0.2)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(139, 92, 246, 0.1)'; this.style.transform='translateY(0)'">
+                <i class="fas fa-arrow-left"></i>
+                Previous
+            </a>
+            {% else %}
+            <span></span>
+            {% endif %}
+
+            <a href="/blog/" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: rgba(139, 92, 246, 0.1); color: var(--accent-primary); text-decoration: none; border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 25px; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(139, 92, 246, 0.2)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(139, 92, 246, 0.1)'; this.style.transform='translateY(0)'">
+                <i class="fas fa-home"></i>
+                Back to Blog
+            </a>
+
+            {% if page.next %}
+            <a href="{{ page.next.url }}" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: rgba(139, 92, 246, 0.1); color: var(--accent-primary); text-decoration: none; border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 25px; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(139, 92, 246, 0.2)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(139, 92, 246, 0.1)'; this.style.transform='translateY(0)'">
+                Next
+                <i class="fas fa-arrow-right"></i>
+            </a>
+            {% else %}
+            <span></span>
+            {% endif %}
+        </div>
+    </div>
 </article>
+
+<!-- Scroll Animation -->
+<script>
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        observer.observe(el);
+    });
+</script>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ page.title }} | {{ site.title }}</title>
+    <title>{{ page.title | default: site.title }}</title>
     {% if page.description %}
     <meta name="description" content="{{ page.description }}">
     {% endif %}
@@ -14,35 +14,155 @@
     <!-- SEO Tags -->
     {% seo %}
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="{{ page.title | default: site.title }}">
-    <meta property="og:description" content="{{ page.description | default: site.description }}">
-    <meta property="og:type" content="website">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="{{ page.url | absolute_url }}" />
+    <meta property="og:title" content="{{ page.title | default: site.title }}" />
+    <meta property="og:description" content="{{ page.description | default: site.description }}" />
+    <meta property="og:image" content="https://buu.name.vn/profile.jpg" />
+    <meta property="og:site_name" content="Bob Pham Portfolio" />
+    {% if page.date %}
+    <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}" />
+    {% endif %}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ page.title | default: site.title }}" />
+    <meta name="twitter:description" content="{{ page.description | default: site.description }}" />
 
     <!-- Atom Feed -->
     <link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="/blog/feed.xml">
 
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ page.url | absolute_url }}" />
+
+    <!-- Sitemap -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
     <!-- Styles -->
     <link rel="stylesheet" href="/assets/css/style.css">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GK8ZFEH5JM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-GK8ZFEH5JM');
+    </script>
 </head>
 <body>
-    <header class="site-header">
-        <nav class="site-nav">
-            <a href="/" class="site-title">{{ site.title }}</a>
-            <ul>
-                <li><a href="/index.html">Home</a></li>
+    <div class="bg-gradient"></div>
+    <div class="scroll-indicator"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="/" class="logo">Bob Pham</a>
+            <ul class="nav-links">
+                <li><a href="/#about">About</a></li>
+                <li><a href="/#experience">Experience</a></li>
+                <li><a href="/#projects">Projects</a></li>
+                <li><a href="/#skills">Skills</a></li>
+                <li><a href="/#services">Services</a></li>
                 <li><a href="/blog/">Blog</a></li>
-                <li><a href="/about.html">About</a></li>
+                <li><a href="/#contact">Contact</a></li>
             </ul>
+            <div class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </nav>
     </header>
 
-    <main class="site-content">
+    <!-- Main Content -->
+    <main style="min-height: 60vh;">
         {{ content }}
     </main>
 
-    <footer class="site-footer">
-        <p>&copy; 2026 {{ site.author }}. All rights reserved.</p>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Pham Quoc Buu (Bob). Built with lots of café.</p>
     </footer>
+
+    <script>
+        // Header background on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            const scrollY = window.scrollY;
+
+            if (scrollY > 100) {
+                header.style.background = 'rgba(10, 10, 10, 0.95)';
+            } else {
+                header.style.background = 'rgba(10, 10, 10, 0.9)';
+            }
+        });
+
+        // Scroll progress indicator
+        window.addEventListener('scroll', () => {
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = window.scrollY / totalHeight;
+            scrollIndicator.style.transform = `scaleX(${progress})`;
+        });
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                mobileMenuBtn.classList.toggle('active');
+            });
+        }
+
+        // Parallax effect for background gradient
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const parallax = document.querySelector('.bg-gradient');
+            const speed = scrolled * 0.5;
+            parallax.style.transform = `translateY(${speed}px)`;
+        });
+
+        // Performance optimization: Throttle scroll events
+        let ticking = false;
+
+        function updateScrollEffects() {
+            const scrollY = window.scrollY;
+
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = scrollY / totalHeight;
+            scrollIndicator.style.transform = `scaleX(${progress})`;
+
+            const header = document.querySelector('header');
+            if (scrollY > 100) {
+                header.style.background = 'rgba(10, 10, 10, 0.95)';
+            } else {
+                header.style.background = 'rgba(10, 10, 10, 0.9)';
+            }
+
+            const parallax = document.querySelector('.bg-gradient');
+            const speed = scrollY * 0.5;
+            parallax.style.transform = `translateY(${speed}px)`;
+
+            ticking = false;
+        }
+
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(updateScrollEffects);
+                ticking = true;
+            }
+        }
+
+        window.addEventListener('scroll', requestTick);
+    </script>
 </body>
 </html>
+

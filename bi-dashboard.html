@@ -304,7 +304,7 @@
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Pham Quoc Buu (Bob). Built with lots of café.</p>
+        <p><p>&copy; 2025 Pham Quoc Buu (Bob). Built with lots of café.</p>copy; <span id="year">2025</span> Pham Quoc Buu (Bob). Built with lots of café.</p>
     </footer>
 
     <script>
@@ -345,6 +345,8 @@
             const progress = window.scrollY / totalHeight;
             scrollIndicator.style.transform = `scaleX(${progress})`;
         });
+        // Update year dynamically
+        document.getElementById('year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>

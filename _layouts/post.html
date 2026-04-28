@@ -41,8 +41,8 @@ layout: default
                 <h3 style="margin-bottom: 1rem;">Tags</h3>
                 <div class="skill-tags">
                     {% for tag in page.tags %}
-                    <a href="/blog/tags/{{ tag | slugify }}/" class="skill-tag" style="text-decoration: none; cursor: pointer;">
-                        <i class="fas fa-tag" style="margin-right: 0.3rem;"></i>{{ tag }}
+                    <a href="/blog/tags/{{ tag | slugify }}/" class="skill-tag-cyan">
+                        <i class="fas fa-tag" style="font-size: 0.7rem;"></i>{{ tag }}
                     </a>
                     {% endfor %}
                 </div>

@@ -87,6 +87,14 @@ permalink: /blog/
     </div>
 </section>
 
+<!-- Blog CTA -->
+<div class="blog-cta">
+    <p>Want to stay updated? New articles drop regularly on system design, AI, and modern dev practices.</p>
+    <a href="/blog/feed.xml" class="blog-cta-btn">
+        <i class="fas fa-rss"></i> Subscribe via RSS
+    </a>
+</div>
+
 <!-- Scroll Animation -->
 <script>
     const observerOptions = {

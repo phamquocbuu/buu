@@ -834,3 +834,203 @@ footer {
     transform: scaleX(0);
     z-index: 1001;
 }
+
+/* ── Blog ── */
+
+/* Active nav state for blog pages */
+.nav-links li.blog-active > a {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.nav-links li.blog-active > a::after {
+    width: 100%;
+}
+
+/* Blog post card hover */
+article.content-card {
+    transition: all 0.3s ease;
+}
+
+article.content-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-primary);
+    box-shadow: 0 20px 60px rgba(139, 92, 246, 0.1);
+}
+
+/* Post content prose typography */
+.post-content {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+.post-content h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 2rem 0 0.75rem;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.post-content h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    -webkit-text-fill-color: var(--text-primary);
+    margin: 1.5rem 0 0.5rem;
+}
+
+.post-content p {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+}
+
+.post-content ul {
+    padding-left: 0;
+    margin-bottom: 1rem;
+    list-style: none;
+    margin-top: 0;
+}
+
+.post-content ul li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.post-content ul li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent-primary);
+}
+
+.post-content ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.post-content ol li {
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    list-style: decimal;
+    padding-left: 0;
+}
+
+.post-content ol li::before {
+    content: none;
+}
+
+.post-content code {
+    font-family: 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.875rem;
+    background: var(--bg-secondary);
+    color: var(--accent-secondary);
+    padding: 2px 6px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.post-content pre {
+    background: var(--bg-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 1.25rem;
+    overflow-x: auto;
+    margin-bottom: 1.25rem;
+}
+
+.post-content pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--accent-secondary);
+    font-size: 0.85rem;
+}
+
+.post-content a {
+    color: var(--accent-secondary);
+    text-decoration: none;
+}
+
+.post-content a:hover {
+    color: var(--accent-primary);
+}
+
+.post-content strong {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.post-content blockquote {
+    border-left: 3px solid var(--accent-primary);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Cyan tag pill variant for post tags */
+.skill-tag-cyan {
+    background: rgba(6, 182, 212, 0.1);
+    color: var(--text-secondary);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    text-decoration: none;
+}
+
+.skill-tag-cyan:hover {
+    color: var(--accent-secondary);
+}
+
+/* Blog index footer CTA */
+.blog-cta {
+    background: var(--bg-secondary);
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.blog-cta p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 0 auto 1.5rem;
+    max-width: 480px;
+}
+
+.blog-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--accent-secondary), #0891b2);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 8px 24px rgba(6, 182, 212, 0.25);
+    transition: all 0.3s ease;
+}
+
+.blog-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(6, 182, 212, 0.35);
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .blog-cta {
+        padding: 2rem 1rem;
+    }
+}

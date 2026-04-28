@@ -6,7 +6,7 @@ baseurl: ""
 url: "https://buupham.dev"
 
 # Footer Configuration
-footer_tagline: "Built with lots of café and tokens"
+tagline: "Built with lots of café and tokens"
 
 # Build settings
 markdown: kramdown

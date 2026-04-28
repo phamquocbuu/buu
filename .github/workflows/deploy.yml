@@ -2,7 +2,7 @@ name: Build and Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ master ]  # Change this to your main branch
+    branches: [ master ]
   workflow_dispatch:
 
 permissions:
@@ -21,29 +21,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: |
-          npm install --save-dev html-minifier-terser clean-css-cli
+      - name: Install Node dependencies
+        run: npm install --save-dev html-minifier-terser clean-css-cli
 
-      - name: Create minified directory
-        run: mkdir -p dist
+      - name: Build Jekyll site
+        run: bundle exec jekyll build
+        env:
+          JEKYLL_ENV: production
 
       - name: Minify CSS
         run: |
-          npx cleancss -o dist/style.css style.css
+          npx cleancss -o _site/assets/css/style.css _site/assets/css/style.css
+          [ -f _site/style.css ] && npx cleancss -o _site/style.css _site/style.css || true
 
-      - name: Minify HTML files
+      - name: Minify root HTML files
         run: |
-          # Copy HTML files first, then minify them one by one
-          cp *.html dist/
-          cd dist
-          for file in *.html; do
-            echo "Minifying $file..."
+          for file in _site/*.html; do
+            [ -f "$file" ] || continue
             npx html-minifier-terser \
               --collapse-whitespace \
               --remove-comments \
@@ -54,28 +59,9 @@ jobs:
               --use-short-doctype \
               --minify-css true \
               --minify-js true \
-              --output "$file.tmp" \
-              "$file" && mv "$file.tmp" "$file"
+              --output "$file" \
+              "$file"
           done
-
-      - name: Copy static assets
-        run: |
-          # Copy all non-HTML/CSS files to dist
-          find . -type f \
-            ! -path './.git/*' \
-            ! -path './node_modules/*' \
-            ! -path './dist/*' \
-            ! -path './.github/*' \
-            ! -name '*.html' \
-            ! -name 'style.css' \
-            ! -name 'package*.json' \
-            -exec cp --parents {} dist/ \;
-
-      - name: Update CSS references in minified HTML
-        run: |
-          # Update CSS references to point to minified version
-          cd dist
-          sed -i 's|href="./style.css"|href="./style.css"|g' *.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -83,7 +69,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: './_site'
 
   deploy:
     environment:

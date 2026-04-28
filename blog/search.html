@@ -63,6 +63,7 @@ permalink: /blog/search/
                 this.field('categories', { boost: 5 });
                 this.field('tags',       { boost: 5 });
                 this.field('excerpt');
+                this.field('content');
 
                 docs.forEach(d => {
                     this.add({
@@ -70,7 +71,8 @@ permalink: /blog/search/
                         title:      d.title,
                         categories: Array.isArray(d.categories) ? d.categories.join(' ') : '',
                         tags:       Array.isArray(d.tags)       ? d.tags.join(' ')       : '',
-                        excerpt:    d.excerpt
+                        excerpt:    d.excerpt,
+                        content:    d.content
                     });
                 });
             });

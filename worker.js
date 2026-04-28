@@ -79,12 +79,11 @@ export default {
         });
       }
 
-      const mailgunApiKey = env.MAILGUN_API_KEY;
-      const domain = env.MAILGUN_DOMAIN;
-      const recipientEmail = env.RECIPIENT_EMAIL || 'phamquocbuu@gmail.com';
+      const telegramBotToken = env.TELEGRAM_BOT_TOKEN;
+      const telegramChatId = env.TELEGRAM_CHAT_ID;
 
-      if (!mailgunApiKey || !domain) {
-        return new Response(JSON.stringify({ success: false, error: 'Server configuration error' }), { 
+      if (!telegramBotToken || !telegramChatId) {
+        return new Response(JSON.stringify({ success: false, error: 'Server configuration error' }), {
           status: 500,
           headers: {
             'Content-Type': 'application/json',
@@ -93,41 +92,31 @@ export default {
         });
       }
 
-      const mailgunUrl = `https://api.mailgun.net/v3/${domain}/messages`;
+      const telegramUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
 
-      const params = new URLSearchParams();
-      params.append('from', `Contact Form <noreply@${domain}>`);
-      params.append('to', recipientEmail);
-      params.append('reply-to', data.email);
-      params.append('subject', `New Contact Form Submission from ${data.name}`);
-      
-      // Create HTML email content
-      const htmlContent = `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${data.name}</p>
-        <p><strong>Email:</strong> ${data.email}</p>
-        <p><strong>Message:</strong></p>
-        <div style="background-color: #f5f5f5; padding: 15px; border-left: 4px solid #8b5cf6; margin: 10px 0;">
-          ${data.message.replace(/\n/g, '<br>')}
-        </div>
-        <hr>
-        <p style="color: #666; font-size: 12px;">This email was sent from your portfolio contact form.</p>
-      `;
-      
-      params.append('html', htmlContent);
-      params.append('text', `Name: ${data.name}\nEmail: ${data.email}\nMessage: ${data.message}`);
+      const telegramMessage = `<b>New Contact Form Submission</b>
 
-      const response = await fetch(mailgunUrl, {
+<b>Name:</b> ${data.name}
+<b>Email:</b> ${data.email}
+<b>Message:</b>
+<pre>${data.message}</pre>`;
+
+      const response = await fetch(telegramUrl, {
         method: 'POST',
         headers: {
-          'Authorization': 'Basic ' + btoa(`api:${mailgunApiKey}`),
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/json',
         },
-        body: params
+        body: JSON.stringify({
+          chat_id: telegramChatId,
+          text: telegramMessage,
+          parse_mode: 'HTML'
+        })
       });
 
-      if (response.ok) {
-        return new Response(JSON.stringify({ success: true, message: 'Email sent successfully' }), { 
+      const telegramResult = await response.json();
+
+      if (telegramResult.ok) {
+        return new Response(JSON.stringify({ success: true, message: 'Message sent to Telegram successfully' }), {
           status: 200,
           headers: {
             'Content-Type': 'application/json',
@@ -135,9 +124,8 @@ export default {
           }
         });
       } else {
-        const errorText = await response.text();
-        console.error('Mailgun error:', errorText);
-        return new Response(JSON.stringify({ success: false, error: 'Failed to send email' }), { 
+        console.error('Telegram error:', telegramResult);
+        return new Response(JSON.stringify({ success: false, error: 'Failed to send message to Telegram' }), {
           status: 500,
           headers: {
             'Content-Type': 'application/json',

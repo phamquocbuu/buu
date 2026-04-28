@@ -13,6 +13,19 @@ permalink: /blog/
     </div>
 </section>
 
+<!-- Search Bar -->
+<div style="background: #0d0d0d; padding: 2rem 2rem 0;">
+    <form class="search-form" action="/blog/search/" method="get">
+        <div class="search-input-wrap">
+            <i class="fas fa-search"></i>
+            <input type="text" name="q" class="search-input" placeholder="Search articles…" autocomplete="off">
+        </div>
+        <button type="submit" class="search-btn">
+            <i class="fas fa-search"></i> Search
+        </button>
+    </form>
+</div>
+
 <!-- Blog Posts Section -->
 <section class="content-section pattern-circuit">
     <div style="max-width: 900px; margin: 0 auto;">

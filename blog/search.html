@@ -1,0 +1,156 @@
+---
+layout: default
+title: Search
+description: Search articles on system design, AI, and engineering
+permalink: /blog/search/
+---
+
+<!-- Search Hero -->
+<section class="hero pattern-tech-hero" style="min-height: 44vh; padding-top: 8rem;">
+    <div class="hero-content" style="animation: fadeInUp .8s ease;">
+        <h1 style="font-size: clamp(2rem, 6vw, 3.5rem);">Search Articles</h1>
+        <p class="subtitle" style="font-size: 1.1rem;">Find posts on system design, AI workflows, and engineering</p>
+        <form id="search-form" class="search-form" action="/blog/search/" method="get">
+            <div class="search-input-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" name="q" class="search-input"
+                       placeholder="e.g. ElasticSearch, n8n, Docker…" autocomplete="off">
+            </div>
+            <button type="submit" class="search-btn">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </form>
+    </div>
+</section>
+
+<!-- Results -->
+<div class="pattern-circuit" style="background: #0d0d0d; position: relative; z-index: 1;">
+    <section class="content-section" style="max-width: 900px; padding-top: 3rem; padding-bottom: 4rem;">
+        <div id="search-status" class="search-status" style="display: none;"></div>
+        <div id="search-results" style="display: grid; gap: 1.75rem;"></div>
+    </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.3.9/lunr.min.js"
+        integrity="sha512-4xUl/d6D6THrAnXAwGajXkoWaeMNwEKK4iNfq5DotEbLPAfk6FSxSP3ydNxqDgCw1c/0Z1Jg6L8h2j+++9BZg=="
+        crossorigin="anonymous"></script>
+<script>
+(function () {
+    const params = new URLSearchParams(window.location.search);
+    const query  = (params.get('q') || '').trim();
+
+    const inputEl   = document.getElementById('search-input');
+    const statusEl  = document.getElementById('search-status');
+    const resultsEl = document.getElementById('search-results');
+
+    if (inputEl) inputEl.value = query;
+
+    if (!query) {
+        statusEl.style.display = 'block';
+        statusEl.innerHTML = 'Enter a search term above to find articles.';
+        return;
+    }
+
+    statusEl.style.display = 'block';
+    statusEl.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:.5rem;"></i>Searching…';
+
+    fetch('/blog/search.json')
+        .then(r => r.json())
+        .then(docs => {
+            const idx = lunr(function () {
+                this.ref('id');
+                this.field('title',      { boost: 10 });
+                this.field('categories', { boost: 5 });
+                this.field('tags',       { boost: 5 });
+                this.field('excerpt');
+
+                docs.forEach(d => {
+                    this.add({
+                        id:         d.id,
+                        title:      d.title,
+                        categories: Array.isArray(d.categories) ? d.categories.join(' ') : '',
+                        tags:       Array.isArray(d.tags)       ? d.tags.join(' ')       : '',
+                        excerpt:    d.excerpt
+                    });
+                });
+            });
+
+            let hits;
+            try {
+                hits = idx.search(query);
+            } catch (_) {
+                hits = idx.search(query.replace(/[~^*+-]/g, ''));
+            }
+
+            if (!hits.length) {
+                statusEl.innerHTML =
+                    'No results for <strong>"' + escapeHtml(query) + '"</strong>. Try different keywords.';
+                return;
+            }
+
+            const byId = {};
+            docs.forEach(d => { byId[d.id] = d; });
+
+            statusEl.innerHTML =
+                'Found <strong>' + hits.length + '</strong> result' +
+                (hits.length === 1 ? '' : 's') +
+                ' for <strong>"' + escapeHtml(query) + '"</strong>';
+
+            resultsEl.innerHTML = hits.map(hit => {
+                const p = byId[hit.ref];
+                if (!p) return '';
+
+                const cats = (p.categories || []).map(c =>
+                    '<span class="skill-tag" style="font-size:.78rem;">' +
+                    '<i class="fas fa-folder" style="font-size:.7rem;margin-right:4px;"></i>' + escapeHtml(c) +
+                    '</span>'
+                ).join('');
+
+                return `
+<article class="content-card" style="transition:all .3s;">
+    <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.75rem;">
+        <h3 style="margin:0;font-size:1.15rem;font-weight:700;">
+            <a href="${p.url}" style="color:#fff;text-decoration:none;"
+               onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#fff'">
+                ${highlight(p.title, query)}
+            </a>
+        </h3>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;font-size:.85rem;color:#a1a1aa;">
+            <span><i class="fas fa-calendar-alt" style="margin-right:4px;color:#8b5cf6;"></i>${escapeHtml(p.date || '')}</span>
+            ${p.author ? `<span><i class="fas fa-user" style="margin-right:4px;color:#8b5cf6;"></i>${escapeHtml(p.author)}</span>` : ''}
+            ${p.readTime ? `<span><i class="fas fa-clock" style="margin-right:4px;color:#8b5cf6;"></i>${escapeHtml(String(p.readTime))} min read</span>` : ''}
+        </div>
+    </div>
+    <p style="color:#a1a1aa;font-size:.95rem;line-height:1.8;margin-bottom:1rem;">
+        ${highlight(p.excerpt || '', query)}
+    </p>
+    ${cats ? `<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;">${cats}</div>` : ''}
+    <a href="${p.url}"
+       style="display:inline-flex;align-items:center;gap:6px;color:#06b6d4;text-decoration:none;font-weight:600;font-size:.9rem;"
+       onmouseover="this.style.color='#8b5cf6'" onmouseout="this.style.color='#06b6d4'">
+        Read more <i class="fas fa-arrow-right"></i>
+    </a>
+</article>`;
+            }).join('');
+        })
+        .catch(() => {
+            statusEl.innerHTML =
+                'Could not load search index. Please try again later.';
+        });
+
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function highlight(text, term) {
+        if (!term) return escapeHtml(text);
+        const escaped = escapeHtml(text);
+        const re = new RegExp('(' + term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+        return escaped.replace(re, '<mark class="search-highlight">$1</mark>');
+    }
+})();
+</script>
